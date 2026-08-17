@@ -20,7 +20,7 @@ class Solution{
             else{
                 swap(nums[mid], nums[high]);
                 high -=1;
-            }
+            } 
         }
     }
 };
