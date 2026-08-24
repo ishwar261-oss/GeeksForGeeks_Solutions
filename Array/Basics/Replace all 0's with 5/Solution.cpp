@@ -1,24 +1,25 @@
 class Solution {
 public:
-    int convertFive(int n) {
-        
-        if(n == 0) return 5;
-        
-        int ans = 0;
-        int place = 1;
+  int convertFive(int n) {
 
-        while (n > 0) {
-            int digit = n % 10;
+    if (n == 0)
+      return 5;
 
-            if (digit == 0)
-                digit = 5;
+    int ans = 0;
+    int place = 1;
 
-            ans += digit * place;
+    while (n > 0) {
+      int digit = n % 10;
 
-            place *= 10;
-            n /= 10;
-        }
+      if (digit == 0)
+        digit = 5;
 
-        return ans;
+      ans += digit * place;
+
+      place *= 10;
+      n /= 10;
     }
+
+    return ans;
+  }
 };
