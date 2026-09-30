@@ -1,6 +1,20 @@
 #include <iostream>
+#include<vector>
 using namespace std;
 
+vector<int> fibonacciNumbers(int n) {
+    if (n == 1)
+        return {0};
+
+    if (n == 2)
+        return {0, 1};
+
+    vector<int> ans = fibonacciNumbers(n - 1);
+
+    ans.push_back(ans[ans.size() - 1] + ans[ans.size() - 2]);
+
+    return ans;
+}
 void fib(int n, int a, int b) {
     if (n == 0)
         return;
