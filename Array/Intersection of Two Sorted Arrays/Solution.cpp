@@ -1,47 +1,80 @@
 class Solution {
 public:
-   vector<int> intersection(vector<int>& a, vector<int>& b) {
-    set<int> s;
-    set<int> ans;
+    long long countConsistent(vector<int>& nums) {
+        int n = nums.size();
 
-    for(int i = 0; i < a.size(); i++) {
-        s.insert(a[i]);
-    }
 
-    for(int i = 0; i < b.size(); i++) {
-        if(s.find(b[i]) != s.end()) {
-            ans.insert(b[i]);
+        vector<int> left(n), right(n);
+        vector<int> s;
+
+
+        for(int i = 0; i < n; i++) {
+            while(!s.empty() && nums[s.back()] > nums[i])
+                s.pop_back();
+
+            left[i] = s.empty() ? -1 : s.back();
+            s.push_back(i);
         }
+
+        s.clear();
+
+
+        for(int i = n-1; i >= 0; i--) {
+            while(!s.empty() && nums[s.back()] >= nums[i])
+                s.pop_back();
+
+            right[i] = s.empty() ? n : s.back();
+            s.push_back(i);
+        }
+
+        vector<int> leftLim(n), rightLim(n);
+
+        int lastZero[31];
+        fill(lastZero, lastZero + 31, -1);
+
+        for(int i = 0; i < n; i++) {
+            leftLim[i] = 0;
+
+            for(int b = 0; b < 31; b++) {
+                if(nums[i] & (1 << b))
+                    leftLim[i] = max(leftLim[i], lastZero[b] + 1);
+            }
+
+            for(int b = 0; b < 31; b++) {
+                if(!(nums[i] & (1 << b)))
+                    lastZero[b] = i;
+            }
+        }
+
+        int nextZero[31];
+        fill(nextZero, nextZero + 31, n);
+
+        for(int i = n-1; i >= 0; i--) {
+            rightLim[i] = n-1;
+
+            for(int b = 0; b < 31; b++) {
+                if(nums[i] & (1 << b))
+                    rightLim[i] = min(rightLim[i], nextZero[b] - 1);
+            }
+
+            for(int b = 0; b < 31; b++) {
+                if(!(nums[i] & (1 << b)))
+                    nextZero[b] = i;
+            }
+        }
+
+        long long ans = 0;
+
+        for(int i = 0; i < n; i++) {
+            int l = max(left[i] + 1, leftLim[i]);
+            int r = min(right[i] - 1, rightLim[i]);
+
+            long long leftC = i - l + 1;
+            long long rightC = r - i + 1;
+
+            ans += leftC * rightC;
+        }
+
+        return ans;
     }
-
-    return vector<int>(ans.begin(), ans.end());
-
-    // int n1 = a.size();
-    // int n2 = b.size();
-    // vector<int>ans;
-    // int j= 0, i= 0;
-    // while(i < n1 && j < n2){
-    //     if(a[i] < b[j]){
-    //         ans.push_back(a[i]);
-    //         i++;
-    //     }else if(a[i] > b[j]){
-    //         ans.push_back(b[j]);
-    //         j++;
-    //     }else{
-    //         ans.push_back(a[i]);
-    //         i++;
-    //         j++;
-    //     }
-    // }
-    // while(i < n1){
-    //     if(ans.size() == 0 || ans.back() != a[i])
-    //         ans.push_back(a[i]);
-    // }
-    // while(j < n2){
-    //     if(ans.size() == 0 || ans.back() != b[j])
-    //         ans.push_back(b[j]);
-    // }
-
-    // return ans;
-}
 };
